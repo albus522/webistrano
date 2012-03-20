@@ -1,4 +1,4 @@
-<% flashed_errors(:project) %>
+<%= flashed_errors(:project) %>
 <p>
   <b>Name</b><br />
   <%= text_field 'project', 'name', :style =>'width:330px;' %>
@@ -15,20 +15,20 @@
 
 <% content_for(:page_scripts) do %>
  <script type="text/javascript">
- 
+
     Event.observe(window, 'load', function(){
       Event.observe('project_template', 'change', show_template_info);
-      
+
       // show info for already chosen template
       show_template_info();
     });
- 
+
    function show_template_info(){
      hide_all_infos();
      var info_to_show = $F('project_template') + '_desc';
      $(info_to_show).show();
    }
-   
+
    function hide_all_infos(){
      <% for template in @template_infos %>
        $('<%=h template.first %>_desc').hide();

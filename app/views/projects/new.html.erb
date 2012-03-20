@@ -1,8 +1,8 @@
-<% form_for(:project, :url => projects_path) do |f| %>
+<%= form_for(:project, :url => projects_path) do |f| %>
 <div style="width:335px;">
 
   <%= render(:partial => 'form')%>
-  
+
   <%= link_to 'Back to projects', projects_path, :class => 'arrow_link ontheright' %>
 
   <p>
@@ -13,9 +13,9 @@
 
 
 <% content_for(:breadcrumb) do %>
-  <% breadcrumb_box do %>
+  <%= breadcrumb_box do %>
     <%= link_to "Manage Projects", projects_path, :style => "float:right", :class => "arrow_link" %>
-    <%= link_to "Projects", projects_path %> &gt; 
+    <%= link_to "Projects", projects_path %> &gt;
     New
   <% end %>
 <% end %>

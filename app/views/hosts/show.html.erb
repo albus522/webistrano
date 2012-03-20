@@ -21,7 +21,7 @@
 		</p>
 		<% if current_user.admin? %>
   		<br />
-	  	<%= link_to 'Edit Host', edit_host_path(@host), :class => 'arrow_link' %> | 
+	  	<%= link_to 'Edit Host', edit_host_path(@host), :class => 'arrow_link' %> |
 		  <%= link_to 'Delete', host_path(@host), :confirm => 'Are you sure?', :method => :delete, :class => 'arrow_link'  %>
 		<% end %>
   </div>
@@ -37,10 +37,10 @@
 </fieldset>
 
 <% content_for(:breadcrumb) do %>
-  <% breadcrumb_box do %>
+  <%= breadcrumb_box do %>
     <%= link_to "Manage hosts", hosts_path, :style => "float:right", :class => "arrow_link" %>
-    <%= link_to "Hosts", hosts_path %> &gt; 
-    Host <%= link_to @host.name, host_path(@host) %> 
+    <%= link_to "Hosts", hosts_path %> &gt;
+    Host <%= link_to @host.name, host_path(@host) %>
   <% end %>
 <% end %>
 

@@ -1,10 +1,10 @@
-<% form_for(:stage, :url => recipes_project_stage_path(@project, @stage), :html => { :method => :put }) do |f| %>  
+<%= form_for(:stage, :url => recipes_project_stage_path(@project, @stage), :html => { :method => :put }) do |f| %>
 
   <fieldset class="fieldset">
     <legend>Recipes to use</legend>
-    
+
     <% if Recipe.count > 0 %>
-    
+
       <table class="sortable">
         <tr>
           <th width="1%">Use</th>
@@ -19,31 +19,31 @@
           </tr>
         <% end %>
       </table>
-      
+
       <br />
       <p>
         <%= submit_tag "Update used recipes" %>
       </p>
-      
+
     <% else %>
      No recipes present<br /><br />
     <% end %>
-  
-  </fieldset>    
-    
-    
-  
-  
+
+  </fieldset>
+
+
+
+
 <% end %>
 <br />
 <%= link_to 'Back to stage', project_stage_path(current_project, current_stage), :class => 'arrow_link'  %>
 
 <% content_for(:breadcrumb) do %>
-  <% breadcrumb_box do %>
+  <%= breadcrumb_box do %>
     <%= link_to "Back to stage", project_stage_path(current_project, current_stage), :style => "float:right", :class => "arrow_link" %>
-    <%= link_to "Projects", projects_path %> &gt; 
-    Project <%= link_to current_project.name, project_path(current_project) %> &gt; 
-    Stage <%= link_to current_stage.name, project_stage_path(current_project, current_stage) %>  &gt; 
+    <%= link_to "Projects", projects_path %> &gt;
+    Project <%= link_to current_project.name, project_path(current_project) %> &gt;
+    Stage <%= link_to current_stage.name, project_stage_path(current_project, current_stage) %>  &gt;
     Recipes management
   <% end %>
 <% end %>
