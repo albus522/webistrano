@@ -25,7 +25,7 @@ class UsersControllerTest < ActionController::TestCase
     
     assert_no_difference 'User.count' do
       create_user(:login => nil)
-      assert assigns(:user).errors.on(:login)
+      assert assigns(:user).errors[:login].any?
       assert_response :success
     end
   end
@@ -35,7 +35,7 @@ class UsersControllerTest < ActionController::TestCase
     
     assert_no_difference 'User.count' do
       create_user(:password => nil)
-      assert assigns(:user).errors.on(:password)
+      assert assigns(:user).errors[:password].any?
       assert_response :success
     end
   end
@@ -45,7 +45,7 @@ class UsersControllerTest < ActionController::TestCase
     
     assert_no_difference 'User.count' do
       create_user(:password_confirmation => nil)
-      assert assigns(:user).errors.on(:password_confirmation)
+      assert assigns(:user).errors[:password_confirmation].any?
       assert_response :success
     end
   end
@@ -55,7 +55,7 @@ class UsersControllerTest < ActionController::TestCase
     
     assert_no_difference 'User.count' do
       create_user(:email => nil)
-      assert assigns(:user).errors.on(:email)
+      assert assigns(:user).errors[:email].any?
       assert_response :success
     end
   end
