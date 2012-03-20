@@ -1,7 +1,8 @@
 config/*.yml
 config/webistrano_config.rb
-tmp/*
+db/*.sqlite3
 log/*
+tmp/*
 *~
 .DS_Store
 *.tmproj
