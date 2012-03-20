@@ -57,9 +57,6 @@ Webistrano::Application.routes.draw do
   get   '/login'  => 'sessions#new'
   match '/logout' => 'sessions#destroy'
 
-  # stylesheet
-  get '/stylesheets/application(.format)' => 'stylesheets#application', :as => :stylesheet
-
   # Install the default route as the lowest priority.
   match ':controller/:action/:id(.:format)'
 end
