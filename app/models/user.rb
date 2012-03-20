@@ -1,10 +1,10 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
   has_many :deployments, :dependent => :nullify, :order => 'created_at DESC'
-  
+
   # Virtual attribute for the unencrypted password
   attr_accessor :password
-  
+
   attr_accessible :login, :email, :password, :password_confirmation, :time_zone, :tz
 
   validates_presence_of     :login, :email
@@ -16,16 +16,16 @@ class User < ActiveRecord::Base
   validates_length_of       :email,    :within => 3..100
   validates_uniqueness_of   :login, :email, :case_sensitive => false
   before_save :encrypt_password
-  
-  named_scope :enabled, :conditions => {:disabled => nil}
-  named_scope :disabled, :conditions => "disabled IS NOT NULL"
-    
-  def validate_on_update
+
+  scope :enabled, :conditions => {:disabled => nil}
+  scope :disabled, :conditions => "disabled IS NOT NULL"
+
+  validate :on => :update do
     if User.find(self.id).admin? && !self.admin?
       errors.add('admin', 'status can no be revoked as there needs to be one admin left.') if User.admin_count == 1
     end
   end
-  
+
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u = find_by_login_and_disabled(login, nil) # need to get the salt
@@ -62,61 +62,61 @@ class User < ActiveRecord::Base
   def remember_me_until(time)
     self.remember_token_expires_at = time
     self.remember_token            = encrypt("#{email}--#{remember_token_expires_at}")
-    save(false)
+    save(:validate => false)
   end
 
   def forget_me
     self.remember_token_expires_at = nil
     self.remember_token            = nil
-    save(false)
+    save(:validate => false)
   end
-  
+
   def admin?
     self.admin.to_i == 1
   end
-  
+
   def revoke_admin!
     self.admin = 0
     self.save!
   end
-  
+
   def make_admin!
     self.admin = 1
     self.save!
   end
-  
+
   def self.admin_count
     count(:id, :conditions => ['admin = 1 AND disabled IS NULL'])
   end
-  
+
   def recent_deployments(limit=3)
     self.deployments.find(:all, :limit => limit, :order => 'created_at DESC')
   end
-  
+
   def disabled?
     !self.disabled.blank?
   end
-  
+
   def disable
     self.update_attribute(:disabled, Time.now)
     self.forget_me
   end
-  
+
   def enable
     self.update_attribute(:disabled, nil)
   end
 
   protected
-    # before filter 
+    # before filter
     def encrypt_password
       return if password.blank?
       self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
       self.crypted_password = encrypt(password)
     end
-    
+
     def password_required?
       WebistranoConfig[:authentication_method] != :cas && (crypted_password.blank? || !password.blank?)
     end
 
-    
+
 end
