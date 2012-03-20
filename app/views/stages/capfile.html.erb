@@ -8,7 +8,7 @@ load 'deploy'
   <% if role.role_attribute_hash.blank? -%>
   role :<%= role.name %>, <%= capfile_cast(role.hostname_and_port) %>
   <% else -%>
-  role :<%= role.name %>, <%= capfile_cast(role.hostname_and_port) %>, <%= role.role_attribute_hash.inspect %>
+  role :<%= role.name %>, <%= capfile_cast(role.hostname_and_port) %>, <%= role.role_attribute_hash.inspect.html_safe %>
   <% end -%>
 <% end %>
 
@@ -34,13 +34,13 @@ load 'deploy'
 # TEMPLATE TASKS
 # ================================================================
 
-<%= @stage.project.tasks %>
+<%= @stage.project.tasks.html_safe %>
 
 # ================================================================
 # CUSTOM RECIPES
 # ================================================================
 
 <% @stage.recipes.each do |recipe| %>
-  <%= recipe.body %>
+  <%= recipe.body.html_safe %>
 <% end %>
 

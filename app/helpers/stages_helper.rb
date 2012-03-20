@@ -1,5 +1,5 @@
 module StagesHelper
-  
+
   def display_deployment_problems(stage)
     out =  "<ul>"
     stage.deployment_problems.each do |k,v|
@@ -8,26 +8,27 @@ module StagesHelper
     out += "</ul>"
     return out
   end
-  
+
   # returns the escaped format of a config value
   def capfile_cast(val)
-    casted_val = Webistrano::Deployer.type_cast(val).class
-
-    if casted_val == String || casted_val == ActiveSupport::SafeBuffer
-      val.inspect
-    elsif casted_val == Symbol
-      val.to_s
-    elsif casted_val == Array
-      val.to_s
-    elsif casted_val == Hash
-      val.to_s
-    elsif (casted_val == TrueClass ) || (casted_val == FalseClass)
+    case Webistrano::Deployer.type_cast(val)
+    when String, ActiveSupport::SafeBuffer
+      val.inspect.html_safe
+    when Symbol
+      val.to_s.html_safe
+    when Array
+      val.to_s.html_safe
+    when Hash
+      val.to_s.html_safe
+    when TrueClass, FalseClass
       val
-    elsif casted_val == NilClass
+    when NilClass
       'nil'
+    else
+      val.to_s.html_safe
     end
 
   end
 
-  
+
 end
