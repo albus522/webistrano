@@ -27,7 +27,7 @@ Webistrano::Application.routes.draw do
 
     resources :project_configurations
 
-    resources :stages, :member => {} do
+    resources :stages do
       member do
         get   :capfile
         match :recipes
