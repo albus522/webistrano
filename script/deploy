@@ -72,9 +72,9 @@ end
 ################################################################################
 # now it's time to make the connection to Webistrano
 ENV['RAILS_ENV']  ||= options.environment
-ENV['RAILS_ROOT'] ||= File.expand_path(File.dirname(__FILE__) + '/..')
-Dir.chdir(ENV['RAILS_ROOT']) # required by Webistrano
-require ENV['RAILS_ROOT'] + '/config/environment'
+ENV['Rails.root'] ||= File.expand_path(File.dirname(__FILE__) + '/..')
+Dir.chdir(ENV['Rails.root']) # required by Webistrano
+require ENV['Rails.root'] + '/config/environment'
 
 ################################################################################
 begin
