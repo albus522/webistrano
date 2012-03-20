@@ -14,7 +14,17 @@
   <%= text_area 'recipe', 'body', :style =>'width:663px; height: 400px;' %>
 </p>
 
-<%= observe_field "recipe_body", :frequency => 2.5, :with => "Form.Element.serialize('recipe_body')", :url => preview_recipes_url%>
+<script type="text/javascript">
+//<![CDATA[
+new Form.Element.Observer('recipe_body', 2.5, function(element, value) {
+	new Ajax.Request(
+		'<%= preview_recipes_url %>',
+		{asynchronous:true, evalScripts:true, parameters:Form.Element.serialize('recipe_body')}
+	)
+})
+//]]>
+</script>
+
 <div id="preview_fieldset">
   <fieldset class="fieldset" style="width:560px;">
     <legend>Code-Preview</legend>
