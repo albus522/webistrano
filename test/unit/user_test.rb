@@ -16,31 +16,31 @@ class UserTest < ActiveSupport::TestCase
   def test_should_require_login
     assert_no_difference 'User.count' do
       u = create_user(:login => nil)
-      assert u.errors.on(:login)
+      assert u.errors[:login].any?
     end
   end
 
   def test_should_require_password
     assert_no_difference 'User.count' do
       u = create_user(:password => nil)
-      assert u.errors.on(:password)
+      assert u.errors[:password].any?
     end
   end
 
   def test_should_require_password_confirmation
     assert_no_difference 'User.count' do
       u = create_user(:password_confirmation => nil)
-      assert u.errors.on(:password_confirmation)
+      assert u.errors[:password_confirmation].any?
     end
   end
 
   def test_should_require_email
     assert_no_difference 'User.count' do
       u = create_user(:email => nil)
-      assert u.errors.on(:email)
+      assert u.errors[:email].any?
     end
   end
-  
+
   def test_should_not_authenticate_if_disabled
     assert_equal users(:quentin), User.authenticate('quentin', 'test')
     User.find_by_login("quentin").disable
@@ -99,88 +99,88 @@ class UserTest < ActiveSupport::TestCase
     assert_not_nil users(:quentin).remember_token_expires_at
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
-  
+
   def test_admin
     user = create_new_user
     assert !user.admin?
-    
+
     user.admin = 1
     assert user.admin?
-    
+
     user.revoke_admin!
     assert !user.admin?
-    
+
     user.make_admin!
     assert user.admin?
   end
-  
+
   def test_revert_admin_status_only_if_other_admins_left
     User.delete_all
-    
+
     admin = create_new_user
     admin.make_admin!
     assert admin.admin?
-    
+
     user = create_new_user
     assert !user.admin?
-    
+
     # check that the admin status of admin cannot be taken
     assert_raise(ActiveRecord::RecordInvalid){
       admin.revoke_admin!
     }
   end
-  
+
   def test_recent_deployments
     user = create_new_user
     stage = create_new_stage
     role = create_new_role(:stage => stage)
-    5.times do 
+    5.times do
       deployment = create_new_deployment(:stage => stage, :user => user)
     end
-    
+
     assert_equal 5, user.deployments.count
     assert_equal 3, user.recent_deployments.size
     assert_equal 2, user.recent_deployments(2).size
   end
-  
+
   def test_disable
     user = create_new_user
     assert !user.disabled?
-    
+
     user.disable
-    
+
     assert user.disabled?
-    
+
     user.enable
-    
+
     assert !user.disabled?
   end
-  
+
   def test_disable_resets_remember_me
     user = create_new_user
     user.remember_me
-    
+
     assert_not_nil user.remember_token
     assert_not_nil user.remember_token_expires_at
-    
+
     user.disable
-    
+
     assert_nil user.remember_token
     assert_nil user.remember_token_expires_at
   end
-  
+
   def test_enabled_named_scope
     User.destroy_all
     assert_equal [], User.enabled
     assert_equal [], User.disabled
-    
+
     user = create_new_user
-    
+
     assert_equal [user], User.enabled
     assert_equal [], User.disabled
-    
+
     user.disable
-    
+
     assert_equal [], User.enabled
     assert_equal [user], User.disabled
   end

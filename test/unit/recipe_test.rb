@@ -11,9 +11,9 @@ class RecipeTest < ActiveSupport::TestCase
       )
     }
   end
-  
+
   def test_validation
-    
+
     # missing name
     recipe = Recipe.new(
       :name => nil,
@@ -21,7 +21,7 @@ class RecipeTest < ActiveSupport::TestCase
       :body => "set :config_files, 'database.yml' "
     )
     assert !recipe.valid?
-    
+
     # missing body
     recipe = Recipe.new(
       :name => 'Copy Tasks',
@@ -29,7 +29,7 @@ class RecipeTest < ActiveSupport::TestCase
       :body => nil
     )
     assert !recipe.valid?
-    
+
     # name too long
     recipe = Recipe.new(
       :name => 'Copy Config files' * 100,
@@ -37,11 +37,11 @@ class RecipeTest < ActiveSupport::TestCase
       :body => "set :config_files, 'database.yml' "
     )
     assert !recipe.valid?
-    
+
     # fix name and save
     recipe.name = 'Copy'
     recipe.save!
-    
+
     # name not unique
     recipe = Recipe.new(
       :name => 'Copy',
@@ -56,21 +56,21 @@ class RecipeTest < ActiveSupport::TestCase
                            :description => "Recipe body intentionally erronous",
                            :body => "set config_files, database.yml'")
     assert !recipe.valid?
-    assert_equal "syntax error at line: 1", recipe.errors.on(:body)
+    assert_equal "syntax error at line: 1", recipe.errors[:body].first
   end
-  
+
   def test_validate_valid_syntax_on_create
     recipe = Recipe.create(:name => "Copy Config files",
                            :description => "Recipe body intentionally erronous",
                            :body => "set :config_files, 'database.yml'")
-    assert !recipe.errors.on(:body)
+    assert recipe.errors[:body].empty?
   end
-  
+
   def test_validate_with_open4_error
     Open4.expects(:popen4).raises(RuntimeError)
     recipe = Recipe.create(:name => "Copy Config files",
                            :description => "Recipe body intentionally erronous",
                            :body => "set :config_files, 'database.yml'")
-    assert !recipe.errors.on(:body)
+    assert recipe.errors[:body].empty?
   end
 end
